@@ -114,7 +114,7 @@ G4LogicalVolume* Geometry::constructTriggerScinti()
       "LogVol_TriggerScinti"
    );
    G4VisAttributes* attr_TriggerScinti = new G4VisAttributes(true);
-   attr_TriggerScinti->SetColor(G4Color::Red());
+   attr_TriggerScinti->SetColor(G4Color::Blue());
    logVol_TriggerScinti->SetVisAttributes(attr_TriggerScinti);
 
    return logVol_TriggerScinti;
