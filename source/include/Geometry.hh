@@ -20,6 +20,8 @@ class Geometry : public G4VUserDetectorConstruction
 
     G4LogicalVolume* constructLogWorld();
     G4LogicalVolume* constructLogAlminumBox();
+    G4LogicalVolume* constructScinti();
+    G4LogicalVolume* constructTriggerScinti();
 
 };
 #endif
