@@ -14,6 +14,8 @@
 #include <iostream>
 
 int main(int argc, char** argv){
+    G4Random::setTheEngine(new CLHEP::RanecuEngine);
+
     G4RunManager* runManager = new G4RunManager;
     runManager->SetUserInitialization(new Geometry);
     runManager->SetUserInitialization(new FTFP_BERT);
