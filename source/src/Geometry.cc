@@ -131,13 +131,21 @@ G4VPhysicalVolume* Geometry::Construct()
 
    // placement scinti into AlBox
    G4int copyNum_Scinti = 100;
+   G4double deg_MeshScinti = 5 * deg;
+   G4RotationMatrix* rotMat_Scinti;
+   G4RotationMatrix* rotMat_Scinti_Upside = new G4RotationMatrix();
+   G4RotationMatrix* rotMat_Scinti_Downside = new G4RotationMatrix();
+   rotMat_Scinti_Upside->rotateZ(+ deg_MeshScinti);
+   rotMat_Scinti_Downside->rotateZ(- deg_MeshScinti);
    for (G4int i = -3; i <= 4; i++){
       for (G4int j = 0; j < 4; j++){
          for (G4int k = 0; k < 2; k++){
             // k=0: downside, k=1: upside
+            if (k == 0) { rotMat_Scinti = rotMat_Scinti_Downside; }
+            else { rotMat_Scinti = rotMat_Scinti_Upside; }
             new G4PVPlacement(
                G4Transform3D(
-                  G4RotationMatrix(),
+                  *rotMat_Scinti,
                   G4ThreeVector((-6 + 4*j) * cm, 0, (5*i - 0.5 + k) * cm)
                   ),
                G4String("PhysVol_Scinti") + G4String(std::to_string(copyNum_Scinti)),
