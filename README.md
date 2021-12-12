@@ -5,4 +5,3 @@ Geant4 Simulation
 - 解析マクロ書く
     - Hist
     - 飛跡再構成
-- Seed被り解消
