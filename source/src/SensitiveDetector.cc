@@ -19,6 +19,7 @@ SensitiveDetector::SensitiveDetector(G4String name)
     outFileName = "tmp.root";
     tree = new TTree("tree", "mcMuonPhotoProduction Output");
     tree->Branch("trackID", &trackID);
+    tree->Branch("parentID", &parentID);
     tree->Branch("globalTime", &globalTime);
     tree->Branch("particleName", &particleName);
     tree->Branch("charge", &charge);
@@ -52,6 +53,7 @@ void SensitiveDetector::saveTTreeAsRootFile()
 void SensitiveDetector::Initialize(G4HCofThisEvent*)
 {
     trackID = {};
+    parentID = {};
     globalTime = {};
     particleName = {};
     charge = {};
@@ -79,6 +81,7 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     G4ThreeVector poststepPos = postStepPoint->GetPosition();
 
     trackID.push_back(aTrack->GetTrackID());
+    parentID.push_back(aTrack->GetParentID());
     globalTime.push_back(aTrack->GetGlobalTime()/ns);
     particleName.push_back((std::string)aTrack->GetDynamicParticle()->GetParticleDefinition()->GetParticleName());
     charge.push_back(aTrack->GetDefinition()->GetPDGCharge()/eplus);
