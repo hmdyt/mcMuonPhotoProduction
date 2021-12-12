@@ -1,4 +1,6 @@
 #include "Geometry.hh"
+#include "SensitiveDetector.hh"
+#include "G4SDManager.hh"
 #include "G4Box.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4LogicalVolume.hh"
@@ -126,6 +128,14 @@ G4VPhysicalVolume* Geometry::Construct()
    G4LogicalVolume* logVol_AlBox = constructLogAlminumBox();
    G4LogicalVolume* logVol_Scinti = constructScinti();
    G4LogicalVolume* logVol_TriggerScinti = constructTriggerScinti();
+
+   // sensitive detector set
+   SensitiveDetector* sensitiveDetector = new SensitiveDetector("SensitiveDetector");
+   logVol_AlBox->SetSensitiveDetector(sensitiveDetector);
+   logVol_Scinti->SetSensitiveDetector(sensitiveDetector);
+   logVol_TriggerScinti->SetSensitiveDetector(sensitiveDetector);
+   G4SDManager* SDManager = G4SDManager::GetSDMpointer();
+   SDManager->AddNewDetector(sensitiveDetector);
 
    // placement world
    G4int copyNum_World = 0;
