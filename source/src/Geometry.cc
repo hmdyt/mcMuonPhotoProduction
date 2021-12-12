@@ -11,28 +11,64 @@
 #include "G4SystemOfUnits.hh"
 
 
-Geometry::Geometry(){}
+Geometry::Geometry(){
+   materi_Man = G4NistManager::Instance();
+}
 
 Geometry::~Geometry() {}
 
-G4VPhysicalVolume* Geometry::Construct()
+G4LogicalVolume* Geometry::constructLogWorld()
 {
-   G4NistManager* materi_Man = G4NistManager::Instance();
-
-   // define world
-   G4double leng_X_World = 5.0*m;
-   G4double leng_Y_World = 5.0*m;
-   G4double leng_Z_World = 5.0*m;
+   G4double leng_X_World = 5.0 * m;
+   G4double leng_Y_World = 5.0 * m;
+   G4double leng_Z_World = 5.0 * m;
    G4Box* solid_World = new G4Box(
       "Solid_World",
-      leng_X_World/2.0,
-      leng_Y_World/2.0,
-      leng_Z_World/2.0 
+      leng_X_World / 2.0,
+      leng_Y_World / 2.0,
+      leng_Z_World / 2.0
       );
    G4Material* materi_World = materi_Man->FindOrBuildMaterial("G4_AIR");
-   G4LogicalVolume* logVol_World = new G4LogicalVolume(solid_World, materi_World, "LogVol_World");
+   G4LogicalVolume* logVol_World = new G4LogicalVolume(
+      solid_World,
+      materi_World,
+      "LogVol_World");
    logVol_World->SetVisAttributes(G4VisAttributes::Invisible);
 
+   return logVol_World;
+}
+
+G4LogicalVolume* Geometry::constructLogAlminumBox()
+{
+   G4double leng_X_AlBox = 30 * cm;
+   G4double leng_Y_AlBox = 100 * cm;
+   G4double leng_Z_AlBox = 30 * cm;
+   G4Box* solid_Albox = new G4Box(
+      "Solid_AlBox",
+      leng_X_AlBox / 2,
+      leng_Y_AlBox / 2,
+      leng_Z_AlBox / 2
+   );
+   G4Material* materi_AlBox = materi_Man->FindOrBuildMaterial("G4_Al");
+   G4LogicalVolume* logVol_AlBox = new G4LogicalVolume(
+      solid_Albox,
+      materi_AlBox,
+      "LogVol_AlBox"
+   );
+   
+   G4VisAttributes* attr_Albox = new G4VisAttributes(true);
+   attr_Albox->SetColour(G4Color::Cyan());
+   logVol_AlBox->SetVisAttributes(attr_Albox);
+   
+   return logVol_AlBox;
+}
+
+G4VPhysicalVolume* Geometry::Construct()
+{
+   G4LogicalVolume* logVol_World = constructLogWorld();
+   G4LogicalVolume* logVol_AlBox = constructLogAlminumBox();
+
+   // placement world
    G4int copyNum_World = 0;
    G4PVPlacement* physVol_World  = new G4PVPlacement(
       G4Transform3D(),
@@ -43,40 +79,17 @@ G4VPhysicalVolume* Geometry::Construct()
       copyNum_World
       );
 
-   // define water box
-   G4double leng_X_WaterBox = 10.0*cm;
-   G4double leng_Y_WaterBox = 10.0*cm;
-   G4double leng_Z_WaterBox =  4.0*cm;
-   G4Box* solid_WaterBox = new G4Box(
-      "Solid_WaterBox",
-      leng_X_WaterBox/2.0,
-      leng_Y_WaterBox/2.0,
-      leng_Z_WaterBox/2.0
-      );
-
-   G4Material* materi_WaterBox = materi_Man->FindOrBuildMaterial("G4_WATER");
-   G4LogicalVolume* logVol_WaterBox = new G4LogicalVolume(
-      solid_WaterBox,
-      materi_WaterBox,
-      "LogVol_WaterBox",
-      0, 0, 0 );
-
-   G4double pos_X_LogV = 0.0*cm;
-   G4double pos_Y_LogV = 0.0*cm;
-   G4double pos_Z_LogV = 0.0*cm;
-   G4ThreeVector threeVect_LogV = G4ThreeVector(pos_X_LogV, pos_Y_LogV, pos_Z_LogV);
-   G4RotationMatrix rotMtrx_LogV   = G4RotationMatrix();
-   G4Transform3D trans3D_LogV   = G4Transform3D(rotMtrx_LogV, threeVect_LogV);
-
-   G4int copyNum_LogV = 1000;
+   // placement AlBox into world
+   G4int copyNum_AlBox = 1;
    new G4PVPlacement(
-      trans3D_LogV,
-      "PhysVol_WaterBox",
-      logVol_WaterBox,
+      G4Transform3D(),
+      "PhysVol_AlBox",
+      logVol_AlBox,
       physVol_World,
       false,
-      copyNum_LogV,
-      true );
+      copyNum_AlBox,
+      true
+   );
 
    return physVol_World;
 }

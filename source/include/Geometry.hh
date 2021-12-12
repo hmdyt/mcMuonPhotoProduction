@@ -3,6 +3,8 @@
 
 #include "G4VUserDetectorConstruction.hh"
 class G4VPhysicalVolume;
+class G4LogicalVolume;
+class G4NistManager;
 
 
 class Geometry : public G4VUserDetectorConstruction
@@ -12,5 +14,12 @@ class Geometry : public G4VUserDetectorConstruction
     ~Geometry();
 
     G4VPhysicalVolume* Construct();
+
+  private:
+    G4NistManager* materi_Man;
+
+    G4LogicalVolume* constructLogWorld();
+    G4LogicalVolume* constructLogAlminumBox();
+
 };
 #endif
