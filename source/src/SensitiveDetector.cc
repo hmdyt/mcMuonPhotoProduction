@@ -61,18 +61,24 @@ void SensitiveDetector::Initialize(G4HCofThisEvent*)
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
     G4Track* aTrack = aStep->GetTrack();
-    G4ThreeVector preStepPos = aStep->GetPreStepPoint()->GetPosition();
-    G4ThreeVector poststepPos = aStep->GetPostStepPoint()->GetPosition();
+    G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
+    G4StepPoint* postStepPoint = aStep->GetPostStepPoint();
+    G4ThreeVector preStepPos = preStepPoint->GetPosition();
+    G4ThreeVector poststepPos = postStepPoint->GetPosition();
 
     trackID.push_back(aTrack->GetTrackID());
-    globalTime.push_back(aTrack->GetGlobalTime());
+    globalTime.push_back(aTrack->GetGlobalTime()/ns);
     particleName.push_back((std::string)aTrack->GetDynamicParticle()->GetParticleDefinition()->GetParticleName());
+    charge.push_back(aTrack->GetDefinition()->GetPDGCharge());
+    eDep.push_back(aStep->GetTotalEnergyDeposit());
     prePosX.push_back(preStepPos.x()/cm);
     prePosY.push_back(preStepPos.y()/cm);
     prePosZ.push_back(preStepPos.z()/cm);
     postPosX.push_back(poststepPos.x()/cm);
     postPosY.push_back(poststepPos.y()/cm);
     postPosZ.push_back(poststepPos.z()/cm);
+    preCopyNo.push_back(preStepPoint->GetPhysicalVolume()->GetCopyNo());
+    postCopyNo.push_back(postStepPoint->GetPhysicalVolume()->GetCopyNo());
 
     return true;
 }

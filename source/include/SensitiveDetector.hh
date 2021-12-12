@@ -31,12 +31,16 @@ class SensitiveDetector : public G4VSensitiveDetector
         std::vector<G4int> trackID;
         std::vector<G4double> globalTime;
         std::vector<std::string> particleName;
+        std::vector<G4double> charge;
+        std::vector<G4double> eDep;
         std::vector<G4double> prePosX;
         std::vector<G4double> prePosY;
         std::vector<G4double> prePosZ;
         std::vector<G4double> postPosX;
         std::vector<G4double> postPosY;
         std::vector<G4double> postPosZ;
+        std::vector<G4int> preCopyNo;
+        std::vector<G4int> postCopyNo;
         G4int i_event;
 
 };
