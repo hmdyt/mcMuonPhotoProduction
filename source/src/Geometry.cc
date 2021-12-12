@@ -99,11 +99,33 @@ G4LogicalVolume* Geometry::constructScinti()
    return logVol_Scinti;
 }
 
+G4LogicalVolume* Geometry::constructTriggerScinti()
+{
+   G4VSolid* solid_TriggerScinti = new G4Box(
+      "Solid_TriggerScinti",
+      6 * cm / 2,
+      75 * cm / 2,
+      2 * cm / 2
+   );
+   G4Material* materi_TriggerScinti = materi_Man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
+   G4LogicalVolume* logVol_TriggerScinti = new G4LogicalVolume(
+      solid_TriggerScinti,
+      materi_TriggerScinti,
+      "LogVol_TriggerScinti"
+   );
+   G4VisAttributes* attr_TriggerScinti = new G4VisAttributes(true);
+   attr_TriggerScinti->SetColor(G4Color::Red());
+   logVol_TriggerScinti->SetVisAttributes(attr_TriggerScinti);
+
+   return logVol_TriggerScinti;
+}
+
 G4VPhysicalVolume* Geometry::Construct()
 {
    G4LogicalVolume* logVol_World = constructLogWorld();
    G4LogicalVolume* logVol_AlBox = constructLogAlminumBox();
    G4LogicalVolume* logVol_Scinti = constructScinti();
+   G4LogicalVolume* logVol_TriggerScinti = constructTriggerScinti();
 
    // placement world
    G4int copyNum_World = 0;
@@ -126,6 +148,22 @@ G4VPhysicalVolume* Geometry::Construct()
       physVol_World,
       false,
       copyNum_AlBox,
+      true
+   );
+
+   //placement trigger scinti on Albox
+   G4double trigerScintiArriance = 2 * cm;
+   G4int copyNum_TriggerScinti = 2;
+   new G4PVPlacement(
+      G4Transform3D(
+         G4RotationMatrix(),
+         G4ThreeVector(0, 0, 20 * cm + trigerScintiArriance)
+      ),
+      "PhysVol_TriggerScinti",
+      logVol_TriggerScinti,
+      physVol_AlBox,
+      false,
+      copyNum_TriggerScinti,
       true
    );
 
@@ -156,7 +194,6 @@ G4VPhysicalVolume* Geometry::Construct()
             );
             copyNum_Scinti++;
          }
-
       }
    }
 
