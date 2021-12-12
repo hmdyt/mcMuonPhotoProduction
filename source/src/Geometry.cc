@@ -133,7 +133,7 @@ G4VPhysicalVolume* Geometry::Construct()
    G4int copyNum_Scinti = 100;
    for (G4int i = -3; i <= 4; i++){
       for (G4int j = 0; j < 4; j++){
-         for (G4int k = 0; k < 1; k++){
+         for (G4int k = 0; k < 2; k++){
             // k=0: downside, k=1: upside
             new G4PVPlacement(
                G4Transform3D(
