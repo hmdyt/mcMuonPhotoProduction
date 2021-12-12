@@ -6,6 +6,7 @@
 #include "TTree.h"
 #include "TFile.h"
 #include <vector>
+#include <string>
 class G4Step;
 
 class SensitiveDetector : public G4VSensitiveDetector
@@ -29,7 +30,7 @@ class SensitiveDetector : public G4VSensitiveDetector
         TFile* tfile;
         std::vector<G4int> trackID;
         std::vector<G4double> globalTime;
-        std::vector<G4String> particleName;
+        std::vector<std::string> particleName;
         std::vector<G4double> prePosX;
         std::vector<G4double> prePosY;
         std::vector<G4double> prePosZ;

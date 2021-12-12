@@ -10,6 +10,7 @@
 #include "TTree.h"
 #include "TFile.h"
 #include <vector>
+#include <string>
 
 SensitiveDetector::SensitiveDetector(G4String name)
 :G4VSensitiveDetector(name)
@@ -65,7 +66,7 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
     trackID.push_back(aTrack->GetTrackID());
     globalTime.push_back(aTrack->GetGlobalTime());
-    particleName.push_back(aTrack->GetDynamicParticle()->GetParticleDefinition()->GetParticleName());
+    particleName.push_back((std::string)aTrack->GetDynamicParticle()->GetParticleDefinition()->GetParticleName());
     prePosX.push_back(preStepPos.x()/cm);
     prePosY.push_back(preStepPos.y()/cm);
     prePosZ.push_back(preStepPos.z()/cm);
