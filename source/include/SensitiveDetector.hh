@@ -39,10 +39,9 @@ class SensitiveDetector : public G4VSensitiveDetector
         std::vector<G4double> postPosX;
         std::vector<G4double> postPosY;
         std::vector<G4double> postPosZ;
-        std::vector<G4int> preCopyNo;
-        std::vector<G4int> postCopyNo;
+        std::vector<u_short> preCopyNo;
+        std::vector<u_short> postCopyNo;
         G4int i_event;
-
 };
 
 #endif 

@@ -21,12 +21,16 @@ SensitiveDetector::SensitiveDetector(G4String name)
     tree->Branch("trackID", &trackID);
     tree->Branch("globalTime", &globalTime);
     tree->Branch("particleName", &particleName);
+    tree->Branch("charge", &charge);
+    tree->Branch("eDep", &eDep);
     tree->Branch("prePosX", &prePosX);
     tree->Branch("prePosY", &prePosY);
     tree->Branch("prePosZ", &prePosZ);
     tree->Branch("postPosX", &postPosX);
     tree->Branch("postPosY", &postPosY);
     tree->Branch("postPosZ", &postPosZ);
+    tree->Branch("preCopyNo", &preCopyNo);
+    tree->Branch("postCopyNo", &postCopyNo);
 }
 
 SensitiveDetector::~SensitiveDetector(){}
@@ -50,16 +54,24 @@ void SensitiveDetector::Initialize(G4HCofThisEvent*)
     trackID = {};
     globalTime = {};
     particleName = {};
+    charge = {};
+    eDep = {};
     prePosX = {};
     prePosY = {};
     prePosZ = {};
     postPosX = {};
     postPosY = {};
     postPosZ = {};
+    preCopyNo = {};
+    postCopyNo = {};
 }
 
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
-{
+{   
+    // ignore charge = 0
+    if (aStep->GetTrack()->GetDefinition()->GetPDGCharge() == 0)
+        return true;
+
     G4Track* aTrack = aStep->GetTrack();
     G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
     G4StepPoint* postStepPoint = aStep->GetPostStepPoint();
@@ -69,8 +81,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     trackID.push_back(aTrack->GetTrackID());
     globalTime.push_back(aTrack->GetGlobalTime()/ns);
     particleName.push_back((std::string)aTrack->GetDynamicParticle()->GetParticleDefinition()->GetParticleName());
-    charge.push_back(aTrack->GetDefinition()->GetPDGCharge());
-    eDep.push_back(aStep->GetTotalEnergyDeposit());
+    charge.push_back(aTrack->GetDefinition()->GetPDGCharge()/eplus);
+    eDep.push_back(aStep->GetTotalEnergyDeposit()/MeV);
     prePosX.push_back(preStepPos.x()/cm);
     prePosY.push_back(preStepPos.y()/cm);
     prePosZ.push_back(preStepPos.z()/cm);
@@ -79,7 +91,6 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     postPosZ.push_back(poststepPos.z()/cm);
     preCopyNo.push_back(preStepPoint->GetPhysicalVolume()->GetCopyNo());
     postCopyNo.push_back(postStepPoint->GetPhysicalVolume()->GetCopyNo());
-
     return true;
 }
 
