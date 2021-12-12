@@ -24,6 +24,8 @@ int main(int argc, char** argv){
     if (argc == 1){
         // interactive mode
         G4UIExecutive* uiExec = new G4UIExecutive(argc, argv);
+        // vis_init
+        uiManager->ApplyCommand("/control/execute visSetup_Simplex.mac");
         uiExec->SessionStart();
         delete uiExec;
     } else {
