@@ -44,7 +44,7 @@ int main(int argc, char** argv){
         SensitiveDetector* sensitiveDetector = (SensitiveDetector*)sdManager->FindSensitiveDetector("SensitiveDetector");
         sensitiveDetector->setOutFileName(outFileName);
         uiManager->ApplyCommand("/control/execute " + macroName);
-
+        sensitiveDetector->saveTTreeAsRootFile();
     } else {
         G4cerr << "Invalid argument." << G4endl;
         return -1;
