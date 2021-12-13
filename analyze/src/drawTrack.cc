@@ -15,7 +15,7 @@
 void drawTrack(
     int i_event = 0,
     TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProduction/muonBeam1500MeV_*.root",
-    TString img_folder = "muonBeam1500MeV_*.root"
+    TString img_folder = "muonBeam1500MeV_*.root" // MUST PREPARE MKDIR
 )
 {
     TString saveFilePath = Form("../img/%s/%d.png", img_folder.Data(), i_event);
@@ -130,7 +130,7 @@ void drawTrack(
         trackGraphs.at(i)->Draw("p line same");
     }
     legend->AddEntry((TObject*)0, "Pink: e-");
-    legend->AddEntry((TObject*)0, "Green: e-");
+    legend->AddEntry((TObject*)0, "Green: proton");
     legend->Draw();
     canvas->SaveAs(saveFilePath);
     delete canvas;
@@ -165,4 +165,5 @@ void drawTrack(
     delete canvasROOTFile;
     delete legend;
     delete outFile;
+    delete axis;
 }
