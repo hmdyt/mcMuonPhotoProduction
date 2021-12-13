@@ -10,13 +10,16 @@
 #include <string>
 #include <fstream>
 
-std::map<int, std::vector<double>> drawTrack(TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProduction/muonBeam1500MeV_*.root"){
+void drawTrack(
+    int i_event = 0,
+    TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProduction/muonBeam1500MeV_*.root",
+    TString img_folder = "muonBeam1500MeV_*.root"
+)
+{
+    TString saveFilePath = Form("../img/%s/%d.png", img_folder.Data(), i_event);
+
     TChain* chain = new TChain("tree");
-    TChain* chainSearch = new TChain("tree");
     chain->Add(file_path);
-    chainSearch->Add(file_path);
-    std::vector<int>  pionEventList = makePionEventList(chainSearch, true);
-    delete chainSearch;
     chain->SetBranchStatus("*", 0);
 
     std::map<int, std::vector<std::string>> trackParticleName;
@@ -52,7 +55,7 @@ std::map<int, std::vector<double>> drawTrack(TString file_path = "/data/hamada/g
     chain->SetBranchAddress("postCopyNo", &postCopyNo);
 
     // temporary
-    chain->GetEntry(pionEventList.at(0));
+    chain->GetEntry(i_event);
 
     // init vector in map
     for (int i = 0; i < trackID->size(); i++){
@@ -80,25 +83,58 @@ std::map<int, std::vector<double>> drawTrack(TString file_path = "/data/hamada/g
         trackPostCopyNo.at(trackID->at(i)).push_back(postCopyNo->at(i));
     }
 
-    TGraph2D* trackGraph = new TGraph2D();
+    std::vector<TGraph2D*> trackGraphs = {};
+    TLegend* legend = new TLegend(0.75, 0.75, 1, 1);
 
     int i_trackID;
     int i_graph = 0;
+    int graph_counter;
     for(auto itr = trackPrePosX.begin(); itr != trackPrePosX.end(); ++itr){
         i_trackID = itr->first;
+        graph_counter = 0;
+        trackGraphs.push_back(new TGraph2D());
         for (int i = 0; i < trackPrePosX.at(i_trackID).size(); i++){
-            trackGraph->SetPoint(
-                i_graph,
+            trackGraphs.at(i_graph)->SetPoint(
+                graph_counter,
                 trackPrePosX.at(i_trackID).at(i),
                 trackPrePosY.at(i_trackID).at(i),
                 trackPrePosZ.at(i_trackID).at(i)
             );
-            i_graph++;
+            graph_counter++;
         }
+        // graph settins
+        if (trackParticleName.at(i_trackID).at(0) == "mu+") trackGraphs.at(i_graph)->SetMarkerColor(4); // blue
+        if (trackParticleName.at(i_trackID).at(0) == "mu-") trackGraphs.at(i_graph)->SetMarkerColor(4); // blue
+        if (trackParticleName.at(i_trackID).at(0) == "pi-") trackGraphs.at(i_graph)->SetMarkerColor(2); // red
+        if (trackParticleName.at(i_trackID).at(0) == "pi+") trackGraphs.at(i_graph)->SetMarkerColor(2); // red
+        if (trackParticleName.at(i_trackID).at(0) == "e-")  trackGraphs.at(i_graph)->SetMarkerColor(6); // pink
+        if (trackParticleName.at(i_trackID).at(0) == "proton") trackGraphs.at(i_graph)->SetMarkerColor(8); // green
+        if (
+            trackParticleName.at(i_trackID).at(0) != "e-" &&
+            trackParticleName.at(i_trackID).at(0) != "proton"
+        ){
+            legend->AddEntry(trackGraphs.at(i_graph), trackParticleName.at(i_trackID).at(0).c_str(), "p");
+        }
+        i_graph++;
     }
 
-    trackGraph->SetMarkerStyle(20);
-    getDetectorGraph2D()->Draw("p0");
-    trackGraph->Draw("p same");
-    return trackPrePosX;
+    TCanvas* canvas = new TCanvas();
+    TGraph2D* detectorGraph = getDetectorGraph2D();
+    detectorGraph->SetTitle(Form("track %d;x [cm];y [cm];z [cm]", i_event));
+    detectorGraph->Draw("p0");
+    for (int i = 0; i < trackGraphs.size(); i++){
+        trackGraphs.at(i)->SetMarkerStyle(20);
+        trackGraphs.at(i)->Draw("p line same");
+    }
+    legend->AddEntry((TObject*)0, "Pink: e-");
+    legend->AddEntry((TObject*)0, "Green: e-");
+    legend->Draw();
+    canvas->SaveAs(saveFilePath);
+
+    // delete
+    for (int i = 0; i < trackGraphs.size(); i++) delete trackGraphs[i];
+    delete chain;
+    delete detectorGraph;
+    delete canvas;
+    delete legend;
 }
