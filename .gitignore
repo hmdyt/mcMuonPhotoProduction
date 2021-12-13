@@ -43,3 +43,11 @@ build/
 
 # chache file
 *.chache
+
+# image
+analyze/img/
+analyze/src/*.png
+analyze/src/*.jpeg
+analyze/src/*.jpg
+analyze/src/*.eps
+analyze/src/*.pdf
