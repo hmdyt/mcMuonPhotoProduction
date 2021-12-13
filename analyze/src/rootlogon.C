@@ -14,5 +14,5 @@ void loadMacro(const TString macro_name){
 
 void rootlogon(){
     loadMacro("makePionEventList.cc");
-    loadMacro("drawDetector.cc");
+    loadMacro("getDetectorGraph2D.cc");
 }

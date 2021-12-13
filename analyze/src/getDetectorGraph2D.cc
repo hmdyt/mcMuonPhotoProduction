@@ -10,7 +10,7 @@
 #include <string>
 #include <fstream>
 
-TGraph2D* drawDetector(){
+TGraph2D* getDetectorGraph2D(){
     // length unit => cm
     const double alX = 30;
     const double alY = 100;
