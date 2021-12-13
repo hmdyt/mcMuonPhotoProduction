@@ -155,11 +155,12 @@ void drawTrack(
     legend->Draw();
     
     TFile* outFile = new TFile(saveROOTFilePath, "recreate");
-    outFile->Add(canvas);
+    outFile->Add(canvasROOTFile);
     outFile->Write();
+    
 
     // delete
-    for (int i = 0; i < trackGraphs.size(); i++) delete trackGraphs[i];
+    for (int i = 0; i < trackGraphs.size(); i++) delete trackGraphs.at(i);
     delete chain;
     delete detectorGraph;
     delete canvasROOTFile;
