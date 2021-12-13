@@ -6,6 +6,7 @@
 #include "TCanvas.h"
 #include "TGraph2D.h"
 #include "TFile.h"
+#include "TH3D.h"
 #include <vector>
 #include <map>
 #include <string>
@@ -120,7 +121,7 @@ void drawTrack(
         i_graph++;
     }
 
-    TCanvas* canvas = new TCanvas("canvas", "canvas");
+    TCanvas* canvas = new TCanvas();
     TGraph2D* detectorGraph = getDetectorGraph2D();
     detectorGraph->SetTitle(Form("track %d;x [cm];y [cm];z [cm]", i_event));
     detectorGraph->Draw("p0");
@@ -132,8 +133,26 @@ void drawTrack(
     legend->AddEntry((TObject*)0, "Green: e-");
     legend->Draw();
     canvas->SaveAs(saveFilePath);
+    delete canvas;
 
     // Tfile save
+    TCanvas* canvasROOTFile =  new TCanvas("canvas", "canvas");
+    canvasROOTFile->cd();
+    TH3D* axis = new TH3D(
+        "axisTH3D",
+        Form("track %d;x [cm];y [cm];z [cm]", i_event),
+        0, -50, 50,
+        0, -50, 50,
+        0, -50, 50
+    );
+    axis->SetStats(0);
+    axis->Draw("AXIS");
+    detectorGraph->Draw("p0 same");
+    for (int i = 0; i < trackGraphs.size(); i++){
+        trackGraphs.at(i)->SetMarkerStyle(20);
+        trackGraphs.at(i)->Draw("p line same");
+    }
+    legend->Draw();
     
     TFile* outFile = new TFile(saveROOTFilePath, "recreate");
     outFile->Add(canvas);
@@ -143,7 +162,7 @@ void drawTrack(
     for (int i = 0; i < trackGraphs.size(); i++) delete trackGraphs[i];
     delete chain;
     delete detectorGraph;
-    delete canvas;
+    delete canvasROOTFile;
     delete legend;
     delete outFile;
 }
