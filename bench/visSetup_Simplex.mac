@@ -15,7 +15,7 @@
 /vis/scene/add/axes                           # Axes (x=red, y=green, z=blue)
 
 ## To get nice view
-/vis/viewer/set/style wireframe               # Volume style (surface/wireframe)
+/vis/viewer/set/style surface               # Volume style (surface/wireframe)
 /vis/viewer/set/auxiliaryEdge true            # Show edges of curved surfaces
 /vis/viewer/set/lineSegmentsPerCircle 100     # Make circles smoothed
 /vis/viewer/set/viewpointThetaPhi 300 150     # Nice camera angle
