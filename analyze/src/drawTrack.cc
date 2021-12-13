@@ -5,6 +5,7 @@
 #include "TMath.h"
 #include "TCanvas.h"
 #include "TGraph2D.h"
+#include "TFile.h"
 #include <vector>
 #include <map>
 #include <string>
@@ -17,6 +18,7 @@ void drawTrack(
 )
 {
     TString saveFilePath = Form("../img/%s/%d.png", img_folder.Data(), i_event);
+    TString saveROOTFilePath = Form("../img/%s/%d.root", img_folder.Data(), i_event);
 
     TChain* chain = new TChain("tree");
     chain->Add(file_path);
@@ -118,7 +120,7 @@ void drawTrack(
         i_graph++;
     }
 
-    TCanvas* canvas = new TCanvas();
+    TCanvas* canvas = new TCanvas("canvas", "canvas");
     TGraph2D* detectorGraph = getDetectorGraph2D();
     detectorGraph->SetTitle(Form("track %d;x [cm];y [cm];z [cm]", i_event));
     detectorGraph->Draw("p0");
@@ -131,10 +133,17 @@ void drawTrack(
     legend->Draw();
     canvas->SaveAs(saveFilePath);
 
+    // Tfile save
+    
+    TFile* outFile = new TFile(saveROOTFilePath, "recreate");
+    outFile->Add(canvas);
+    outFile->Write();
+
     // delete
     for (int i = 0; i < trackGraphs.size(); i++) delete trackGraphs[i];
     delete chain;
     delete detectorGraph;
     delete canvas;
     delete legend;
+    delete outFile;
 }
