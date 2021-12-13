@@ -77,6 +77,8 @@ void makePionTrackHist(TString file_path = "/data/hamada/geant4_data/mcMuonPhoto
     chainSearch->Add(file_path);
     std::vector<int>  pionEventList = makePionEventList(chainSearch, true);
     chain->SetBranchStatus("*", 1);
+
+    const unsigned short CopyNoTriggerScinti = 2;
     
     vector<int>* trackID = 0;
     vector<int>* parentID = 0;
@@ -126,6 +128,8 @@ void makePionTrackHist(TString file_path = "/data/hamada/geant4_data/mcMuonPhoto
         flightDistPiMinus = 0;
         for (int j = 0; j < trackID->size(); j++){
             if (!(particleName->at(j) == "pi+" || particleName->at(j) == "pi-")) continue;
+            if (preCopyNo->at(j) == CopyNoTriggerScinti) continue;
+            if (postCopyNo->at(j) == CopyNoTriggerScinti) continue;
             distPreToPost += calcDist3D(
                 prePosX->at(j), prePosY->at(j), prePosZ->at(j),
                 postPosX->at(j), postPosY->at(j), postPosZ->at(j)
