@@ -104,6 +104,13 @@ void drawTrack(
                 trackPrePosZ.at(i_trackID).at(i)
             );
             graph_counter++;
+            trackGraphs.at(i_graph)->SetPoint(
+                graph_counter,
+                trackPostPosX.at(i_trackID).at(i),
+                trackPostPosY.at(i_trackID).at(i),
+                trackPostPosZ.at(i_trackID).at(i)
+            );
+            graph_counter++;
         }
         // graph settins
         if (trackParticleName.at(i_trackID).at(0) == "mu+") trackGraphs.at(i_graph)->SetMarkerColor(4); // blue
