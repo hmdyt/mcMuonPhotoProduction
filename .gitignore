@@ -40,3 +40,6 @@ build/
 
 # ignore output file
 **/*.root
+
+# chache file
+*.chache
