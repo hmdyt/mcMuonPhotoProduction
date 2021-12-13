@@ -29,6 +29,7 @@ class SensitiveDetector : public G4VSensitiveDetector
         TTree* tree;
         TFile* tfile;
         std::vector<G4int> trackID;
+        std::vector<G4int> parentID;
         std::vector<G4double> globalTime;
         std::vector<std::string> particleName;
         std::vector<G4double> charge;
@@ -39,10 +40,9 @@ class SensitiveDetector : public G4VSensitiveDetector
         std::vector<G4double> postPosX;
         std::vector<G4double> postPosY;
         std::vector<G4double> postPosZ;
-        std::vector<G4int> preCopyNo;
-        std::vector<G4int> postCopyNo;
+        std::vector<u_short> preCopyNo;
+        std::vector<u_short> postCopyNo;
         G4int i_event;
-
 };
 
 #endif 

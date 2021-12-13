@@ -12,8 +12,15 @@
 #include "G4ios.hh"
 
 #include <iostream>
+#include <random>
 
 int main(int argc, char** argv){
+    // random seed
+    std::random_device rd{};
+    CLHEP::RanecuEngine* engine = new CLHEP::RanecuEngine;
+    engine->setSeed(rd());
+    G4Random::setTheEngine(engine);
+
     G4RunManager* runManager = new G4RunManager;
     runManager->SetUserInitialization(new Geometry);
     runManager->SetUserInitialization(new FTFP_BERT);
