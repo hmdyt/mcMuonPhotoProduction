@@ -154,6 +154,7 @@ G4VPhysicalVolume* Geometry::Construct()
    SensitiveDetector* sensitiveDetector = new SensitiveDetector("SensitiveDetector");
    logVol_Scinti->SetSensitiveDetector(sensitiveDetector);
    logVol_TriggerScinti->SetSensitiveDetector(sensitiveDetector);
+   logVol_PbGlassScinti->SetSensitiveDetector(sensitiveDetector);
    G4SDManager* SDManager = G4SDManager::GetSDMpointer();
    SDManager->AddNewDetector(sensitiveDetector);
 
