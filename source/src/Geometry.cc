@@ -47,7 +47,7 @@ G4LogicalVolume* Geometry::constructLogAlminumBox()
       "Solid_AlBox_filld",
       30 * cm / 2,
       100 * cm / 2,
-      38 * cm / 2
+      30 * cm / 2
    );
    G4VSolid* solid_Albox_hole = new G4Box(
       "Solid_AlBox_hole",
@@ -62,7 +62,7 @@ G4LogicalVolume* Geometry::constructLogAlminumBox()
          solid_Albox,
          solid_Albox_hole,
          new G4RotationMatrix(),
-         G4ThreeVector(0, 0, 5 * i * cm)
+         G4ThreeVector(0, 0, 4 * i * cm)
       );
    }
    
@@ -166,7 +166,7 @@ G4VPhysicalVolume* Geometry::Construct()
    new G4PVPlacement(
       G4Transform3D(
          G4RotationMatrix(),
-         G4ThreeVector(0, 0, 20.5 * cm + trigerScintiArriance)
+         G4ThreeVector(0, 0, 18 * cm + trigerScintiArriance)
       ),
       "PhysVol_TriggerScinti",
       logVol_TriggerScinti,
@@ -193,7 +193,7 @@ G4VPhysicalVolume* Geometry::Construct()
             new G4PVPlacement(
                G4Transform3D(
                   *rotMat_Scinti,
-                  G4ThreeVector((-6 + 4*j) * cm, 0, (5*i - 0.5 + k) * cm)
+                  G4ThreeVector((-6 + 4*j) * cm, 0, (4*i - 0.5 + k) * cm)
                   ),
                G4String("PhysVol_Scinti") + G4String(std::to_string(copyNum_Scinti)),
                logVol_Scinti,
