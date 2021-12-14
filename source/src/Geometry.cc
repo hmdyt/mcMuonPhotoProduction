@@ -220,7 +220,8 @@ G4VPhysicalVolume* Geometry::Construct()
                logVol_Scinti,
                physVol_World,
                false,
-               copyNum_Scinti
+               copyNum_Scinti,
+               true
             );
             copyNum_Scinti++;
          }
