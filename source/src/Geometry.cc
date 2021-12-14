@@ -122,12 +122,33 @@ G4LogicalVolume* Geometry::constructTriggerScinti()
    return logVol_TriggerScinti;
 }
 
+G4LogicalVolume* Geometry::constructPbGlassScinti(){
+   G4VSolid* solid_PbGlassScinti = new G4Box(
+      "solid_PbGlassScinti",
+      40 / 2 * cm,
+      20 / 2 * cm,
+      20 / 2 * cm
+   );
+   G4Material* materi_PbGlassScinti = materi_Man->FindOrBuildMaterial("G4_GLASS_LEAD");
+   G4LogicalVolume* logVol_PbGlassScinti = new G4LogicalVolume(
+      solid_PbGlassScinti,
+      materi_PbGlassScinti,
+      "LogVol_PbGlassScinti"
+   );
+   G4VisAttributes* attr_PbGlassScinti = new G4VisAttributes(true);
+   attr_PbGlassScinti->SetColor(G4Color::Magenta());
+   logVol_PbGlassScinti->SetVisAttributes(attr_PbGlassScinti);
+
+   return logVol_PbGlassScinti;
+}
+
 G4VPhysicalVolume* Geometry::Construct()
 {
    G4LogicalVolume* logVol_World = constructLogWorld();
    G4LogicalVolume* logVol_AlBox = constructLogAlminumBox();
    G4LogicalVolume* logVol_Scinti = constructScinti();
    G4LogicalVolume* logVol_TriggerScinti = constructTriggerScinti();
+   G4LogicalVolume* logVol_PbGlassScinti = constructPbGlassScinti();
 
    // sensitive detector set
    SensitiveDetector* sensitiveDetector = new SensitiveDetector("SensitiveDetector");
@@ -204,6 +225,25 @@ G4VPhysicalVolume* Geometry::Construct()
             copyNum_Scinti++;
          }
       }
+   }
+
+   // placement PbGlass into world
+   G4int copyNum_PbGlassScinti = 200;
+   G4double PbGlassScintiArriance = 30 * cm;
+   for (G4int i = 0; i < 4; i++){
+      new G4PVPlacement(
+         G4Transform3D(
+            G4RotationMatrix(),
+            G4ThreeVector(0, (30 - 20*i) * cm, - (35 * cm + PbGlassScintiArriance))
+         ),
+         G4String("PhysVol_Scinti") + G4String(std::to_string(copyNum_PbGlassScinti)),
+         logVol_PbGlassScinti,
+         physVol_World,
+         false,
+         copyNum_PbGlassScinti,
+         true
+      );
+      copyNum_PbGlassScinti++;
    }
 
    return physVol_World;
