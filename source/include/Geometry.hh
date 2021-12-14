@@ -22,6 +22,7 @@ class Geometry : public G4VUserDetectorConstruction
     G4LogicalVolume* constructLogAlminumBox();
     G4LogicalVolume* constructScinti();
     G4LogicalVolume* constructTriggerScinti();
+    G4LogicalVolume* constructPbGlassScinti();
 
 };
 #endif
