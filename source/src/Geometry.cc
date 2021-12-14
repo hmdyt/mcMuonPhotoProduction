@@ -178,7 +178,7 @@ G4VPhysicalVolume* Geometry::Construct()
 
    // placement scinti into AlBox
    G4int copyNum_Scinti = 100;
-   G4double deg_MeshScinti = 5 * deg;
+   G4double deg_MeshScinti = 7 * deg;
    G4RotationMatrix* rotMat_Scinti;
    G4RotationMatrix* rotMat_Scinti_Upside = new G4RotationMatrix();
    G4RotationMatrix* rotMat_Scinti_Downside = new G4RotationMatrix();
