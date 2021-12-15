@@ -10,7 +10,14 @@
 #include <string>
 #include <fstream>
 
-void makeXZHitmap(TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProduction/muonBeam1500MeV_0.root"){
+void makeXZHitmap(
+    int i_event = 0,
+    TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProduction/muonBeam1500MeV_0.root",
+    TString img_folder = "muonBeam1500MeV_0.root"
+)
+{
+    TString saveFilePath = Form("../img/%s/%d.png", img_folder.Data(), i_event);
+
     TChain* chain = new TChain("tree");
     chain->Add(file_path);
 
@@ -26,14 +33,13 @@ void makeXZHitmap(TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProdu
     chain->SetBranchAddress("preCopyNo", &preCopyNo);
     chain->SetBranchAddress("postCopyNo", &postCopyNo);
     
-    chain->GetEntry(1);
+    chain->GetEntry(i_event);
 
     int pre_x, pre_z, post_x, post_z, preScintiNo, postScintiNo;
 
     TH2D* h = new TH2D("h", "Hit map; scintillator X Axis; scintillator Z Axis", 4, 0 - 0.5, 4 - 0.5, 30, 0 - 0.5, 30 - 0.5);
 
     for (int i = 0;i < preCopyNo->size(); i++){
-       std::cout << preCopyNo->at(i) <<  "\t" << postCopyNo->at(i) << std::endl;
        preScintiNo = preCopyNo->at(i) - 100;
        postScintiNo = postCopyNo->at(i) - 100;
        if(preScintiNo > 0){
@@ -51,6 +57,11 @@ void makeXZHitmap(TString file_path = "/data/hamada/geant4_data/mcMuonPhotoProdu
        h->Fill(post_x, post_z);
        
     } 
+    TCanvas* c = new TCanvas();
     h->Draw("colz");
+    c->SaveAs(saveFilePath);
     
+    delete h;
+    delete chain;
+    delete c;
 }
