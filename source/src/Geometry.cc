@@ -47,7 +47,7 @@ G4LogicalVolume* Geometry::constructLogAlminumBox()
       "Solid_AlBox_filld",
       30 * cm / 2,
       100 * cm / 2,
-      38 * cm / 2
+      30 * cm / 2
    );
    G4VSolid* solid_Albox_hole = new G4Box(
       "Solid_AlBox_hole",
@@ -62,7 +62,7 @@ G4LogicalVolume* Geometry::constructLogAlminumBox()
          solid_Albox,
          solid_Albox_hole,
          new G4RotationMatrix(),
-         G4ThreeVector(0, 0, 5 * i * cm)
+         G4ThreeVector(0, 0, 4 * i * cm)
       );
    }
    
@@ -122,17 +122,39 @@ G4LogicalVolume* Geometry::constructTriggerScinti()
    return logVol_TriggerScinti;
 }
 
+G4LogicalVolume* Geometry::constructPbGlassScinti(){
+   G4VSolid* solid_PbGlassScinti = new G4Box(
+      "solid_PbGlassScinti",
+      40 / 2 * cm,
+      20 / 2 * cm,
+      20 / 2 * cm
+   );
+   G4Material* materi_PbGlassScinti = materi_Man->FindOrBuildMaterial("G4_GLASS_LEAD");
+   G4LogicalVolume* logVol_PbGlassScinti = new G4LogicalVolume(
+      solid_PbGlassScinti,
+      materi_PbGlassScinti,
+      "LogVol_PbGlassScinti"
+   );
+   G4VisAttributes* attr_PbGlassScinti = new G4VisAttributes(true);
+   attr_PbGlassScinti->SetColor(G4Color::Magenta());
+   logVol_PbGlassScinti->SetVisAttributes(attr_PbGlassScinti);
+
+   return logVol_PbGlassScinti;
+}
+
 G4VPhysicalVolume* Geometry::Construct()
 {
    G4LogicalVolume* logVol_World = constructLogWorld();
    G4LogicalVolume* logVol_AlBox = constructLogAlminumBox();
    G4LogicalVolume* logVol_Scinti = constructScinti();
    G4LogicalVolume* logVol_TriggerScinti = constructTriggerScinti();
+   G4LogicalVolume* logVol_PbGlassScinti = constructPbGlassScinti();
 
    // sensitive detector set
    SensitiveDetector* sensitiveDetector = new SensitiveDetector("SensitiveDetector");
    logVol_Scinti->SetSensitiveDetector(sensitiveDetector);
    logVol_TriggerScinti->SetSensitiveDetector(sensitiveDetector);
+   logVol_PbGlassScinti->SetSensitiveDetector(sensitiveDetector);
    G4SDManager* SDManager = G4SDManager::GetSDMpointer();
    SDManager->AddNewDetector(sensitiveDetector);
 
@@ -166,7 +188,7 @@ G4VPhysicalVolume* Geometry::Construct()
    new G4PVPlacement(
       G4Transform3D(
          G4RotationMatrix(),
-         G4ThreeVector(0, 0, 20.5 * cm + trigerScintiArriance)
+         G4ThreeVector(0, 0, 18 * cm + trigerScintiArriance)
       ),
       "PhysVol_TriggerScinti",
       logVol_TriggerScinti,
@@ -178,7 +200,7 @@ G4VPhysicalVolume* Geometry::Construct()
 
    // placement scinti into AlBox
    G4int copyNum_Scinti = 100;
-   G4double deg_MeshScinti = 5 * deg;
+   G4double deg_MeshScinti = 7 * deg;
    G4RotationMatrix* rotMat_Scinti;
    G4RotationMatrix* rotMat_Scinti_Upside = new G4RotationMatrix();
    G4RotationMatrix* rotMat_Scinti_Downside = new G4RotationMatrix();
@@ -193,17 +215,37 @@ G4VPhysicalVolume* Geometry::Construct()
             new G4PVPlacement(
                G4Transform3D(
                   *rotMat_Scinti,
-                  G4ThreeVector((-6 + 4*j) * cm, 0, (5*i - 0.5 + k) * cm)
+                  G4ThreeVector((-6 + 4*j) * cm, 0, (4*i - 0.5 + k) * cm)
                   ),
                G4String("PhysVol_Scinti") + G4String(std::to_string(copyNum_Scinti)),
                logVol_Scinti,
                physVol_World,
                false,
-               copyNum_Scinti
+               copyNum_Scinti,
+               true
             );
             copyNum_Scinti++;
          }
       }
+   }
+
+   // placement PbGlass into world
+   G4int copyNum_PbGlassScinti = 200;
+   G4double PbGlassScintiArriance = 30 * cm;
+   for (G4int i = 0; i < 4; i++){
+      new G4PVPlacement(
+         G4Transform3D(
+            G4RotationMatrix(),
+            G4ThreeVector(0, (30 - 20*i) * cm, - (35 * cm + PbGlassScintiArriance))
+         ),
+         G4String("PhysVol_Scinti") + G4String(std::to_string(copyNum_PbGlassScinti)),
+         logVol_PbGlassScinti,
+         physVol_World,
+         false,
+         copyNum_PbGlassScinti,
+         true
+      );
+      copyNum_PbGlassScinti++;
    }
 
    return physVol_World;
