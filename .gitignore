@@ -51,3 +51,6 @@ analyze/src/*.jpeg
 analyze/src/*.jpg
 analyze/src/*.eps
 analyze/src/*.pdf
+
+# Mac OS
+.DS_Store
