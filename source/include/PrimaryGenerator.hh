@@ -13,5 +13,8 @@ class PrimaryGenerator : public G4VUserPrimaryGeneratorAction
 
   public:
     void GeneratePrimaries(G4Event*);
+  
+  public: 
+    void GenerateCosmicRay();
 };
 #endif

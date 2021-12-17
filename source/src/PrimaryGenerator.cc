@@ -4,9 +4,16 @@
 #include "G4SystemOfUnits.hh"
 #include "G4Event.hh"
 
+#include "CRYSetup.h"
+
 PrimaryGenerator::PrimaryGenerator(){}
 
 PrimaryGenerator::~PrimaryGenerator(){}
+
+void PrimaryGenerator::GenerateCosmicRay(){
+  CRYSetup* fsasetup = new CRYSetup("", "../build/_deps/cry-src/data");
+  // write down CRY code
+}
 
 void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
 {
