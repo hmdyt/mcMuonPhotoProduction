@@ -12,6 +12,13 @@ PrimaryGenerator::~PrimaryGenerator(){}
 
 void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
 {
+  // CRY setup
+  CRYSetup *setup = new CRYSetup("", "../build/_deps/cry-src/data");
+
+  // Setup the CRY event generator
+  CRYGenerator gen(setup);
+
+
   // particle table
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
 
