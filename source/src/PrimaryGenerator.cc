@@ -1,6 +1,5 @@
 #include "PrimaryGenerator.hh"
 #include "G4ParticleTable.hh"
-#include "G4ParticleGun.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Event.hh"
 
@@ -22,6 +21,9 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
   std::vector<CRYParticle*> *ev = new std::vector<CRYParticle*>;
   ev->clear();
   gen.genEvent(ev);
+
+  // define a particle gun
+  particleGun = new G4ParticleGun();
 
   // particle table
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
