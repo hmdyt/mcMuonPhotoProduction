@@ -18,6 +18,10 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
   // Setup the CRY event generator
   CRYGenerator gen(setup);
 
+  // Generate the events
+  std::vector<CRYParticle*> *ev = new std::vector<CRYParticle*>;
+  ev->clear();
+  gen.genEvent(ev);
 
   // particle table
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
