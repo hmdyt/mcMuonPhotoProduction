@@ -1,47 +1,66 @@
 #include "PrimaryGenerator.hh"
+#include "G4ThreeVector.hh"
 #include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4ParticleGun.hh"
+#include "CRYGenerator.h"
 #include "G4Event.hh"
+#include "G4ios.hh"
 
 #include "CRYSetup.h"
 
-PrimaryGenerator::PrimaryGenerator(){}
+PrimaryGenerator::PrimaryGenerator(){
+  // Create the table containing all particle names
+  particleTable = G4ParticleTable::GetParticleTable();
+
+}
 
 PrimaryGenerator::~PrimaryGenerator(){}
 
 void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
 {
+  // define a particle gun
+  particleGun = new G4ParticleGun();
+
+  G4String particleName;
+
   // CRY setup
   CRYSetup *setup = new CRYSetup("", "../build/_deps/cry-src/data");
 
   // Setup the CRY event generator
-  CRYGenerator gen(setup);
+  gen = new CRYGenerator(setup);
 
   // Generate the events
   std::vector<CRYParticle*> *ev = new std::vector<CRYParticle*>;
   ev->clear();
-  gen.genEvent(ev);
+  gen->genEvent(ev);
 
-  // define a particle gun
-  particleGun = new G4ParticleGun();
+  //....debug output
+  G4cout << "\nEvent=" << anEvent->GetEventID() << " "
+         << "CRY generated nparticles=" << vect->size()
+         << G4endl;
 
-  // particle table
-  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  for ( unsigned j=0; j<vect->size(); j++) {
+    particleName=CRYUtils::partName((*vect)[j]->id());
 
-  // create primary vertex
-  G4ThreeVector vertexPos = G4ThreeVector(0, 0, 50*cm);
-  G4PrimaryVertex* vertex = new G4PrimaryVertex(vertexPos, 0.0*ns);
+    //....debug output  
+    G4cout << "  "          << particleName << " "
+         << "charge="      << (*vect)[j]->charge() << " "
+         << "energy (MeV)=" << (*vect)[j]->ke()*MeV << " "
+         << "pos (m)"
+         << G4ThreeVector((*vect)[j]->x(), (*vect)[j]->y(), (*vect)[j]->z())
+         << " " << "direction cosines "
+         << G4ThreeVector((*vect)[j]->u(), (*vect)[j]->v(), (*vect)[j]->w())
+         << " " << G4endl;
 
-  // create muon
-  G4double E_mu = 1.5 * GeV;
-  G4PrimaryParticle* particleMuPlus = new G4PrimaryParticle(
-    particleTable->FindParticle("mu+")
-  );
-  particleMuPlus->SetTotalEnergy(E_mu);
-  particleMuPlus->SetMomentumDirection(G4ThreeVector(0., 0., -1.
-  ));
+    particleGun->SetParticleDefinition(particleTable->FindParticle((*vect)[j]->PDGid()));
+    particleGun->SetParticleEnergy((*vect)[j]->ke()*MeV);
+    particleGun->SetParticlePosition(G4ThreeVector((*vect)[j]->x()*m, (*vect)[j]->y()*m, (*vect)[j]->z()*m));
+    particleGun->SetParticleMomentumDirection(G4ThreeVector((*vect)[j]->u(), (*vect)[j]->v(), (*vect)[j]->w()));
+    particleGun->SetParticleTime((*vect)[j]->t());
+    particleGun->GeneratePrimaryVertex(anEvent);
 
-  // set
-  vertex->SetPrimary(particleMuPlus);
-  anEvent->AddPrimaryVertex(vertex);
+  }
+  delete setup;
+  delete particleGun;
 }
