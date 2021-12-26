@@ -2,6 +2,11 @@
 #define PrimaryGenerator_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4ParticleGun.hh"
+#include "CRYGenerator.h"
+#include "G4ParticleTable.hh"
+#include <vector>
+
 class G4Event;
 class G4ParticleGun;
 
@@ -14,7 +19,10 @@ class PrimaryGenerator : public G4VUserPrimaryGeneratorAction
   public:
     void GeneratePrimaries(G4Event*);
   
-  public: 
-    void GenerateCosmicRay();
+  private:
+    G4ParticleTable* particleTable;
+    std::vector<CRYParticle*> *vect;
+    G4ParticleGun* particleGun;
+    CRYGenerator* gen;
 };
 #endif
