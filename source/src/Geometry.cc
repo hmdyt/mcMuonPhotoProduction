@@ -22,9 +22,9 @@ Geometry::~Geometry() {}
 
 G4LogicalVolume* Geometry::constructLogWorld()
 {
-   G4double leng_X_World = 5.0 * m;
-   G4double leng_Y_World = 5.0 * m;
-   G4double leng_Z_World = 5.0 * m;
+   G4double leng_X_World = 10.0 * m;
+   G4double leng_Y_World = 10.0 * m;
+   G4double leng_Z_World = 10.0 * m;
    G4Box* solid_World = new G4Box(
       "Solid_World",
       leng_X_World / 2.0,
