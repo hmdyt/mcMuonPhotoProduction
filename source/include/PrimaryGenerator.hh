@@ -20,8 +20,10 @@ class PrimaryGenerator : public G4VUserPrimaryGeneratorAction
     void GeneratePrimaries(G4Event*);
   
   private:
+    G4String setupString;
     G4ParticleTable* particleTable;
-    std::vector<CRYParticle*> *vect;
+    CRYSetup *setup;
+    std::vector<CRYParticle*> *particles;
     G4ParticleGun* particleGun;
     CRYGenerator* gen;
 };
