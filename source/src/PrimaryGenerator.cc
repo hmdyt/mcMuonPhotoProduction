@@ -7,11 +7,38 @@
 #include "G4Event.hh"
 #include "G4ios.hh"
 
+#include <fstream>
+
 #include "CRYSetup.h"
 
 PrimaryGenerator::PrimaryGenerator(){
   // Create the table containing all particle names
   particleTable = G4ParticleTable::GetParticleTable();
+
+  // read the setup file
+  G4String filename = "/home/tomoe/mcMuonPhotoProduction/source/src/setupFile.txt";
+  std::ifstream inputFile(filename);
+  //inputFile.open(filename, std::ios::in);
+  if(!inputFile){
+    G4cout << "Failed to open file." << G4endl;
+  }
+  
+  G4String buffer;
+  //G4int i = 0;  
+
+  while (inputFile >> buffer){    
+    setupString += buffer;
+    setupString += " ";
+  }
+  //G4cout << "setupString = " << setupString << G4endl;
+
+  // CRY setup
+  CRYSetup *setup = new CRYSetup(setupString, "../build/_deps/cry-src/data");
+
+  // Setup the CRY event generator
+  gen = new CRYGenerator(setup);
+
+
 }
 
 PrimaryGenerator::~PrimaryGenerator(){}
@@ -24,10 +51,10 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
   G4String particleName;
 
   // CRY setup
-  CRYSetup *setup = new CRYSetup("", "../build/_deps/cry-src/data");
+  //CRYSetup *setup = new CRYSetup(setupString, "../build/_deps/cry-src/data");
 
   // Setup the CRY event generator
-  gen = new CRYGenerator(setup);
+  //gen = new CRYGenerator(setup);
 
   // Generate the events
   std::vector<CRYParticle*> *particles = new std::vector<CRYParticle*>;
@@ -54,12 +81,14 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
 
     particleGun->SetParticleDefinition(particleTable->FindParticle(particles->at(j)->PDGid()));
     particleGun->SetParticleEnergy(particles->at(j)->ke()*MeV);
-    particleGun->SetParticlePosition(G4ThreeVector(particles->at(j)->x()*m, particles->at(j)->y()*m, particles->at(j)->z()*m));
+    particleGun->SetParticlePosition(G4ThreeVector(particles->at(j)->x()*m, particles->at(j)->y()*m, ( particles->at(j)->z() + 1 )*m));
     particleGun->SetParticleMomentumDirection(G4ThreeVector(particles->at(j)->u(), particles->at(j)->v(), particles->at(j)->w()));
     particleGun->SetParticleTime(particles->at(j)->t());
     particleGun->GeneratePrimaryVertex(anEvent);
-
+    delete particles->at(j);
   }
-  delete setup;
+  delete particles;
+  //delete gen;
+  //delete setup;
   delete particleGun;
 }

@@ -22,9 +22,9 @@ Geometry::~Geometry() {}
 
 G4LogicalVolume* Geometry::constructLogWorld()
 {
-   G4double leng_X_World = 5.0 * m;
-   G4double leng_Y_World = 5.0 * m;
-   G4double leng_Z_World = 5.0 * m;
+   G4double leng_X_World = 10.0 * m;
+   G4double leng_Y_World = 10.0 * m;
+   G4double leng_Z_World = 10.0 * m;
    G4Box* solid_World = new G4Box(
       "Solid_World",
       leng_X_World / 2.0,
@@ -62,8 +62,8 @@ G4LogicalVolume* Geometry::constructLogAlminumBox()
          solid_Albox,
          solid_Albox_hole,
          new G4RotationMatrix(),
-         G4ThreeVector(0, 0, 4 * i * cm)
-      );
+         G4ThreeVector( 0, 0, 4 * i * cm)
+         );
    }
    
    G4Material* materi_AlBox = materi_Man->FindOrBuildMaterial("G4_Al");
