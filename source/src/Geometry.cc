@@ -160,11 +160,8 @@ G4VPhysicalVolume* Geometry::Construct()
 
    // placement world
    G4int copyNum_World = 0;
-   G4ThreeVector world_placement( 1 * m, 0, 0);
-   G4RotationMatrix world_rotation;
-   world_rotation = G4RotationMatrix();
    G4PVPlacement* physVol_World  = new G4PVPlacement(
-      G4Transform3D(world_rotation, world_placement),
+      G4Transform3D(),
       "PhysVol_World",
       logVol_World,
       0,
