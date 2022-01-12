@@ -105,9 +105,9 @@ G4LogicalVolume* Geometry::constructTriggerScinti()
 {
    G4VSolid* solid_TriggerScinti = new G4Box(
       "Solid_TriggerScinti",
-      6 * cm / 2,
-      75 * cm / 2,
-      2 * cm / 2
+      7 * cm / 2,
+      126 * cm / 2,
+      1 * cm / 2
    );
    G4Material* materi_TriggerScinti = materi_Man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
    G4LogicalVolume* logVol_TriggerScinti = new G4LogicalVolume(
@@ -125,9 +125,9 @@ G4LogicalVolume* Geometry::constructTriggerScinti()
 G4LogicalVolume* Geometry::constructPbGlassScinti(){
    G4VSolid* solid_PbGlassScinti = new G4Box(
       "solid_PbGlassScinti",
-      40 / 2 * cm,
-      20 / 2 * cm,
-      20 / 2 * cm
+      31.5 / 2 * cm,
+      11.5 / 2 * cm,
+      11.5 / 2 * cm
    );
    G4Material* materi_PbGlassScinti = materi_Man->FindOrBuildMaterial("G4_GLASS_LEAD");
    G4LogicalVolume* logVol_PbGlassScinti = new G4LogicalVolume(
@@ -184,19 +184,22 @@ G4VPhysicalVolume* Geometry::Construct()
 
    //placement trigger scinti on Albox
    G4double trigerScintiArriance = 2 * cm;
-   G4int copyNum_TriggerScinti = 2;
-   new G4PVPlacement(
-      G4Transform3D(
-         G4RotationMatrix(),
-         G4ThreeVector(0, 0, 18 * cm + trigerScintiArriance)
-      ),
-      "PhysVol_TriggerScinti",
-      logVol_TriggerScinti,
-      physVol_World,
-      false,
-      copyNum_TriggerScinti,
-      true
-   );
+   G4int copyNum_TriggerScinti = 10;
+   for (int i = 0; i < 3; i++){
+      new G4PVPlacement(
+         G4Transform3D(
+            G4RotationMatrix(),
+            G4ThreeVector(7 * (i - 1) * cm, 0, 18 * cm + trigerScintiArriance)
+         ),
+         G4String("PhysVol_TriggerScinti") + G4String(std::to_string(copyNum_TriggerScinti)),
+         logVol_TriggerScinti,
+         physVol_World,
+         false,
+         copyNum_TriggerScinti,
+         true
+      );
+      copyNum_TriggerScinti++;
+   }
 
    // placement scinti into AlBox
    G4int copyNum_Scinti = 100;
@@ -232,13 +235,13 @@ G4VPhysicalVolume* Geometry::Construct()
    // placement PbGlass into world
    G4int copyNum_PbGlassScinti = 200;
    G4double PbGlassScintiArriance = 30 * cm;
-   for (G4int i = 0; i < 4; i++){
+   for (G4int i = 0; i < 3; i++){
       new G4PVPlacement(
          G4Transform3D(
             G4RotationMatrix(),
-            G4ThreeVector(0, (30 - 20*i) * cm, - (35 * cm + PbGlassScintiArriance))
+            G4ThreeVector(0, 11.5 * (i - 1) * cm, - (35 * cm + PbGlassScintiArriance))
          ),
-         G4String("PhysVol_Scinti") + G4String(std::to_string(copyNum_PbGlassScinti)),
+         G4String("PhysVol_PbGlassScinti") + G4String(std::to_string(copyNum_PbGlassScinti)),
          logVol_PbGlassScinti,
          physVol_World,
          false,
