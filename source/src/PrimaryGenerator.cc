@@ -30,8 +30,6 @@ PrimaryGenerator::PrimaryGenerator(){
     setupString += buffer;
     setupString += " ";
   }
-  //G4cout << "setupString = " << setupString << G4endl;
-
   // CRY setup
   CRYSetup *setup = new CRYSetup(setupString, "../build/_deps/cry-src/data");
 
