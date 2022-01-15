@@ -7,6 +7,6 @@ returnPions 0
 returnKaons 0
 latitude 25.99
 altitude 0
-subboxLength 5
+subboxLength 1
 nParticlesMin 1
 nParticlesMax 30
