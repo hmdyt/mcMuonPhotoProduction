@@ -12,7 +12,7 @@
 /vis/scene/endOfEventAction accumulate        # Superimpose all of the events
 
 ## Add decorations
-/vis/scene/add/axes                           # Axes (x=red, y=green, z=blue)
+/vis/scene/add/axes 0 0 0 1 m 
 
 ## To get nice view
 /vis/viewer/set/style surface               # Volume style (surface/wireframe)
