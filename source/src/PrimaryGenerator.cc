@@ -16,7 +16,7 @@ PrimaryGenerator::PrimaryGenerator(){
   particleTable = G4ParticleTable::GetParticleTable();
 
   // read the setup file
-  G4String filename = "/home/tomoe/mcMuonPhotoProduction/source/src/setupFile.txt";
+  G4String filename = "../source/src/setupFile.txt";
   std::ifstream inputFile(filename);
   //inputFile.open(filename, std::ios::in);
   if(!inputFile){
