@@ -29,6 +29,9 @@ void genSpecificParticle(CRYGenerator* gen, std::vector<CRYParticle*> *particles
       }
     }
     if (is_inner){ break; }
+    for (int i = 0; i < particles->size(); i++){
+      delete particles->at(i);
+    }
   }
 }
 
