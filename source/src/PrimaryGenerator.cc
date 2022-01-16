@@ -11,6 +11,25 @@
 
 #include "CRYSetup.h"
 
+void genSpecificParticle(CRYGenerator* gen, std::vector<CRYParticle*> *particles){
+  G4double triggerScintiLengthX = 0.21 * m;
+  G4double triggerScintiLengthY = 1.26 * m;
+  while (true){
+    particles->clear();
+    gen->genEvent(particles);
+    G4bool is_inner = false;
+    for (int i = 0; i < particles->size(); i++){
+      if (
+        abs(particles->at(i)->x() * m) < (triggerScintiLengthX / 2) &&
+        abs(particles->at(i)->y() * m) < (triggerScintiLengthY / 2)
+      ){
+        is_inner = true;
+      }
+    }
+    if (is_inner){ break; }
+  }
+}
+
 PrimaryGenerator::PrimaryGenerator(){
   // Create the table containing all particle names
   particleTable = G4ParticleTable::GetParticleTable();
@@ -51,7 +70,7 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
   // Generate the events
   std::vector<CRYParticle*> *particles = new std::vector<CRYParticle*>;
   particles->clear();
-  gen->genEvent(particles);
+  genSpecificParticle(gen, particles);
 
   //....debug output
   G4cout << "\nEvent=" << anEvent->GetEventID() << " "
