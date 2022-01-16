@@ -3,6 +3,7 @@
 #include "TString.h"
 #include "TMath.h"
 #include "TCanvas.h"
+#include "TFile.h"
 #include <vector>
 
 void makePbGlassEnergyHist(TString file_path = "/home/tomoe/mcMuonPhotoProduction/bench/test_run_05.root"){
@@ -12,9 +13,9 @@ void makePbGlassEnergyHist(TString file_path = "/home/tomoe/mcMuonPhotoProductio
     TTree *tree = (TTree*)file->Get("tree");
 
     // define vector
-    vector<double> *eDep = 0;
-    vector<int> *preCopyNo = 0;
-    vector<int> *postCopyNo = 0;
+    std::vector<double> *eDep = 0;
+    std::vector<int> *preCopyNo = 0;
+    std::vector<int> *postCopyNo = 0;
 
     // define TH1D
     double nBins = 1000;
