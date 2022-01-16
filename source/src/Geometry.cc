@@ -36,7 +36,7 @@ G4LogicalVolume* Geometry::constructLogWorld()
       solid_World,
       materi_World,
       "LogVol_World");
-   logVol_World->SetVisAttributes(G4VisAttributes::Invisible);
+   logVol_World->SetVisAttributes(G4VisAttributes::GetInvisible());
 
    return logVol_World;
 }
