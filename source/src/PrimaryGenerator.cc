@@ -55,21 +55,21 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
 
   //....debug output
   G4cout << "\nEvent=" << anEvent->GetEventID() << " "
-         << "CRY generated nparticles=" << particles->size()
-         << G4endl;
+  << "CRY generated nparticles=" << particles->size()
+  << G4endl;
 
   for ( unsigned j=0; j<particles->size(); j++) {
     particleName=CRYUtils::partName(particles->at(j)->id());
 
     //....debug output  
     G4cout << "  "          << particleName << " "
-         << "charge="      << particles->at(j)->charge() << " "
-         << "energy (MeV)=" << particles->at(j)->ke()*MeV << " "
-         << "pos (m)"
-         << G4ThreeVector(particles->at(j)->x(), particles->at(j)->y(), particles->at(j)->z())
-         << " " << "direction cosines "
-         << G4ThreeVector(particles->at(j)->u(), particles->at(j)->v(), particles->at(j)->w())
-         << " " << G4endl;
+    << "charge="      << particles->at(j)->charge() << " "
+    << "energy (MeV)=" << particles->at(j)->ke()*MeV << " "
+    << "pos (m)"
+    << G4ThreeVector(particles->at(j)->x(), particles->at(j)->y(), particles->at(j)->z())
+    << " " << "direction cosines "
+    << G4ThreeVector(particles->at(j)->u(), particles->at(j)->v(), particles->at(j)->w())
+    << " " << G4endl;
 
     particleGun->SetParticleDefinition(particleTable->FindParticle(particles->at(j)->PDGid()));
     particleGun->SetParticleEnergy(particles->at(j)->ke()*MeV);
