@@ -33,7 +33,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
   include(${Geant4_USE_FILE})
   include_directories(${PROJECT_SOURCE_DIR}/include)
 
-  # CRY
+# CRY
   include(FetchContent)
   FetchContent_Declare(
       cry
