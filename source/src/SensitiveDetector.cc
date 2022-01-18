@@ -18,6 +18,7 @@ SensitiveDetector::SensitiveDetector(G4String name)
     i_event = 0;
     outFileName = "tmp.root";
     tree = new TTree("tree", "mcMuonPhotoProduction Output");
+    tree->SetAutoSave();
     tree->Branch("trackID", &trackID);
     tree->Branch("parentID", &parentID);
     tree->Branch("globalTime", &globalTime);
