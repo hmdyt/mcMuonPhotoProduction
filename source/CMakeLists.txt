@@ -25,9 +25,9 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
   endif()
 
 # Setting ROOT
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT CONFIG REQUIRED)
-include(${ROOT_USE_FILE})
+  list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+  find_package(ROOT CONFIG REQUIRED)
+  include(${ROOT_USE_FILE})
 
 # Set up Geant4 include directories and compile definition
   include(${Geant4_USE_FILE})
