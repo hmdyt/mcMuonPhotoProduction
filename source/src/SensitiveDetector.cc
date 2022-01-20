@@ -9,6 +9,7 @@
 
 #include "TTree.h"
 #include "TFile.h"
+#include "TString.h"
 #include <vector>
 #include <string>
 
@@ -16,6 +17,7 @@ SensitiveDetector::SensitiveDetector(G4String name)
 :G4VSensitiveDetector(name)
 {   
     i_event = 0;
+    i_tree = 0;
     outFileName = "tmp.root";
     tree = new TTree("tree", "mcMuonPhotoProduction Output");
     tree->SetAutoSave();
@@ -44,11 +46,14 @@ void SensitiveDetector::setOutFileName(G4String outFileName_arg)
 }
 
 void SensitiveDetector::saveTTreeAsRootFile()
-{
-    tfile = new TFile(outFileName, "recreate");
+{   
+    TString savingFileName;
+    savingFileName = Form("%s_%d.root", outFileName.c_str(), i_tree);
+    tfile = new TFile(savingFileName.Data(), "recreate");
     tree->Write();
     tfile->Close();
     delete tree;
+    tree = new TTree("tree", "mcMuonPhotoProduction Output");
 }
 
 void SensitiveDetector::Initialize(G4HCofThisEvent*)
@@ -101,6 +106,11 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
 {
     tree->Fill();
-    if (i_event % 1000 == 0){ G4cout << i_event << G4endl; }
+    // save 100 man event
+    if (i_event % 1000000 == 0 && i_event != 0){
+        saveTTreeAsRootFile();
+        G4cout << "saved tree" << i_tree << G4endl;
+        i_tree++;
+    }
     i_event++;
 }
