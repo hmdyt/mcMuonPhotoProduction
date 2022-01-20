@@ -43,6 +43,7 @@ class SensitiveDetector : public G4VSensitiveDetector
         std::vector<u_short> preCopyNo;
         std::vector<u_short> postCopyNo;
         G4int i_event;
+        G4int i_tree;
 };
 
 #endif 

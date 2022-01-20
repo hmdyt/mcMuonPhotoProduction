@@ -25,15 +25,15 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
   endif()
 
 # Setting ROOT
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT CONFIG REQUIRED)
-include(${ROOT_USE_FILE})
+  list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+  find_package(ROOT CONFIG REQUIRED)
+  include(${ROOT_USE_FILE})
 
 # Set up Geant4 include directories and compile definition
   include(${Geant4_USE_FILE})
   include_directories(${PROJECT_SOURCE_DIR}/include)
 
-  # CRY
+# CRY
   include(FetchContent)
   FetchContent_Declare(
       cry
@@ -45,6 +45,17 @@ include(${ROOT_USE_FILE})
   file(GLOB cry_sources ${cry_SOURCE_DIR}/src/*.cc)
   include_directories(${cry_SOURCE_DIR}/src/)
 
+# nlohmann_json
+  FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/nlohmann/json
+  GIT_TAG v3.10.5
+  )
+  FetchContent_GetProperties(json)
+  if(NOT json_POPULATED)
+    FetchContent_Populate(json)
+    add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+  endif()
+
 # Locate sources and headers for this project
   file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
   file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
@@ -52,7 +63,7 @@ include(${ROOT_USE_FILE})
 # Compile and link your application
   add_definitions(${ROOT_CXX_FLAGS})
   add_executable(${NAME_MAIN_PROGRAM} ${NAME_MAIN_PROGRAM}.cc ${sources} ${headers} ${cry_sources} ${cry_headers})
-  target_link_libraries(${NAME_MAIN_PROGRAM} ${Geant4_LIBRARIES} ROOT::MathCore ROOT::Hist ROOT::Tree)
+  target_link_libraries(${NAME_MAIN_PROGRAM} ${Geant4_LIBRARIES} ROOT::MathCore ROOT::Hist ROOT::Tree nlohmann_json::nlohmann_json)
 
 # Install the executable
   set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/..)
