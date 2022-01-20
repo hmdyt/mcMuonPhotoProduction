@@ -6,6 +6,7 @@
 #include "G4HCofThisEvent.hh"
 #include "G4ios.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4RunManager.hh"
 
 #include "TTree.h"
 #include "TFile.h"
@@ -113,4 +114,8 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
         i_tree++;
     }
     i_event++;
+    n_events = G4RunManager::GetRunManager()->GetNumberOfEventsToBeProcessed();
+    if ((100*i_event) % n_events == 0){
+        G4cout << 100*i_event/n_events << "% done" << G4endl;
+    }
 }
