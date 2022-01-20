@@ -20,8 +20,13 @@ SensitiveDetector::SensitiveDetector(G4String name)
     i_event = 0;
     i_tree = 0;
     outFileName = "tmp.root";
+    initTree();
+}
+
+SensitiveDetector::~SensitiveDetector(){}
+
+void SensitiveDetector::initTree(){
     tree = new TTree("tree", "mcMuonPhotoProduction Output");
-    tree->SetAutoSave();
     tree->Branch("trackID", &trackID);
     tree->Branch("parentID", &parentID);
     tree->Branch("globalTime", &globalTime);
@@ -38,8 +43,6 @@ SensitiveDetector::SensitiveDetector(G4String name)
     tree->Branch("postCopyNo", &postCopyNo);
 }
 
-SensitiveDetector::~SensitiveDetector(){}
-
 G4String SensitiveDetector::getOutFileName(){ return outFileName; }
 void SensitiveDetector::setOutFileName(G4String outFileName_arg)
 {
@@ -54,7 +57,7 @@ void SensitiveDetector::saveTTreeAsRootFile()
     tree->Write();
     tfile->Close();
     delete tree;
-    tree = new TTree("tree", "mcMuonPhotoProduction Output");
+    initTree();
 }
 
 void SensitiveDetector::Initialize(G4HCofThisEvent*)
@@ -108,7 +111,7 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
 {
     tree->Fill();
     // save 100 man event
-    if (i_event % 1000000 == 0 && i_event != 0){
+    if (i_event % 1000 == 0 && i_event != 0){
         saveTTreeAsRootFile();
         G4cout << "saved tree" << i_tree << G4endl;
         i_tree++;

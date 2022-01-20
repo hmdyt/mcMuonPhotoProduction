@@ -19,6 +19,7 @@ class SensitiveDetector : public G4VSensitiveDetector
         G4bool ProcessHits(G4Step*, G4TouchableHistory*);
         void EndOfEvent(G4HCofThisEvent*);
 
+        void initTree();
         void setOutFileName(G4String outFileName_arg);
         G4String getOutFileName();
 
